@@ -36,7 +36,7 @@ class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             environ={'REQUEST_METHOD':'POST',
                      'CONTENT_TYPE':self.headers['Content-Type'],})
         try:
-            logger = open("%s.log" %url.replace("https://", "").replace("http://", "").split("/")[0], "w")
+            logger = open("%s.log" %url.replace("https://", "").replace("http://", "").split("/")[0], "w+")
             logger.write("## Data for %s\n\n" %url)
             for tag in form.list:
                 tmp = str(tag).split("(")[1]
@@ -78,7 +78,7 @@ class weeman(object):
         printt(3, "Trying to get %s  ..." %self.url)
         printt(3, "Downloadng wepage ...")
         data = self.request(self.url)
-        data = bs(data)    
+        data = bs(data, "html.parser")    
         printt(3, "Modifying the HTML file ...")
 
         for tag in data.find_all("form"):
