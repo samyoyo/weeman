@@ -10,18 +10,17 @@ Usually we will run Weeman with dns spoof attack (MITM).
 Weeman will do the following steps:
 ------------------------------------
 
-* Weeman will Create fake html page (from the website)
-* Weeman will Wait for clients
-* Weeman will Grab the POST data.(user,password,cookies)
-* Weeman Will try to login the client to the original site :smiley:
+1. create fake html page.
+2. wait for clients
+3. grab the data.
+4. try to login the client to the original page :smiley:
 
-
-![Weeman](https://pbs.twimg.com/media/COftz7qVAAELhct.jpg)
+![Weeman](https://raw.githubusercontent.com/Hypsurus/weeman/master/core/weeman12.png)
 
 Requirements
 ============
 
-* Python 2.7
+* Python 2 or 3 (Checkout python 3 branch)
 * Python BeautifulSoup 4
 
 Install BeautifulSoup

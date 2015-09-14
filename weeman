@@ -21,8 +21,8 @@ except ImportError:
     printt(1, "Please install BeautifulSoup to continue.")
 
 __author__ = "Hypsurus <hypsurus@mail.ru>"
-__version__ = "1.1"
-__codename__ = "Wein"
+__version__ = "1.2"
+__codename__ = "MOTerm"
 
 class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     ## Set server version
