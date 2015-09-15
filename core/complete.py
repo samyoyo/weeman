@@ -7,7 +7,7 @@
 
 import readline
 
-array = ["set", "show", "help", "port", "url", "action_url", "user_agent","clear", "quit", "run"]
+array = ["set", "show", "help", "port", "url", "action_url", "user_agent","clear", "quit", "run", "banner"]
 
 class auto(object):
 
