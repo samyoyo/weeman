@@ -91,8 +91,11 @@ class weeman(object):
     
     def cleanup(self):
         printt(3, "\nRunning cleanup ...")
-        if os.path.exists("index.html") and os.path.exists("ref.html"):
+        ## In case weeman will not create ref.html,
+        ## Remove each file in diffrent check.
+        if os.path.exists("index.html"):
             os.remove("index.html")
+        if os.path.exists("ref.html"):
             os.remove("ref.html")
 
 def create_post(url,action_url, post_request):
