@@ -6,6 +6,7 @@
 
 
 import sys
+import os
 from core.complete import complete
 from core.complete import array 
 from core.config import __version__
@@ -36,6 +37,15 @@ def shell():
 
     print_startup()
     complete(array)
+
+    if os.path.exists("history.log"):
+        if  os.stat("history.log").st_size == 0:
+            history = open("history.log", "w")
+        else:
+            history = open("history.log", "a")
+    else:
+        history = open("history.log", "w")
+
     while True:
         try:
             an = raw_input(" (weeman ) : ")
@@ -62,16 +72,20 @@ def shell():
             elif prompt[0] == "set":
                 if prompt[1] == "port":
                     port = int(prompt[2])
+                    history.write("port = %s\n" %port)
                 if prompt[1] == "url":
                     url = str(prompt[2])
+                    history.write("url = %s\n" %url)
                 if prompt[1] == "action_url":
                     action_url = str(prompt[2])
+                    history.write("action_url = %s\n" %action_url)
                 if prompt[1] == "user_agent":
                     prompt.pop(0)
                     u = str()
                     for x in prompt:
                         u+=" "+x
                     user_agent = str(u.replace("user_agent", ""))
+                    history.write("user_agent = %s\n" %user_agent)
             elif prompt[0] == "run" or prompt[0] == "r":
                 s = weeman(url,port)
                 s.clone()
