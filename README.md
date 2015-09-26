@@ -1,13 +1,15 @@
 Weeman - http server for phishing
 =================================
 
+![Weeman](https://raw.githubusercontent.com/Hypsurus/weeman/master/core/weeman12.png)
+
 DISCLAIMER
 ==========
 
 Usage of Weeman for attacking targets without prior mutual consent is illegal.
 Weeman developer not responsible to any damage caused by Weeman.
 
-bout
+About
 =====
 
 I wrote this as a tool to test network security (the users),
@@ -20,8 +22,6 @@ Weeman will do the following steps:
 2. Wait for clients
 3. Grab the data (POST).
 4. Try to login the client to the original page :smiley:
-
-![Weeman](https://raw.githubusercontent.com/Hypsurus/weeman/master/core/weeman12.png)
 
 Requirements
 ============
@@ -66,6 +66,8 @@ Run server:
 
 * Start the server
 > run
+
+The settings will be saved for the next time you run weeman.py.
 
 Get Weeman
 =============
