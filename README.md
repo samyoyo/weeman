@@ -12,8 +12,10 @@ Weeman developer not responsible to any damage caused by Weeman.
 About
 =====
 
-I wrote this as a tool to test network security (the users),
-Usually we will run Weeman with dns spoof attack (MITM).
+HTTP server for phishing in python.
+Weeman has support for most of the (bigest) websites.
+
+Usually you will want run Weeman with DNS spoof attack. (see dsniff, ettercap).
 
 Weeman will do the following steps:
 ------------------------------------
@@ -26,7 +28,7 @@ Weeman will do the following steps:
 Requirements
 ============
 
-* Python <= 2.7
+* Python <= 2.7.
 * Python BeautifulSoup 4
 
 Install BeautifulSoup
@@ -43,7 +45,7 @@ Platforms
 * Mac (Not tested)
 * Windows (Not tested)
 
-If weeman runs on your platform (Mac/Windows), please let me know.
+[!] If weeman runs on your platform (Mac/Windows), please let me know.
 
 Usage
 ======
