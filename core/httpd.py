@@ -90,7 +90,7 @@ class weeman(object):
         self.httpd.serve_forever()
     
     def cleanup(self):
-        printt(3, "\nRunning cleanup ...")
+        printt(3, "\n:: Running cleanup ...")
         ## In case weeman will not create ref.html,
         ## Remove each file in diffrent check.
         if os.path.exists("index.html"):
